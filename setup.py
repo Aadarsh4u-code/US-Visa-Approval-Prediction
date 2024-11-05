@@ -1,8 +1,13 @@
 from setuptools import setup, find_packages
+from typing import List  
+
+__version__ = "0.0.1"
+SRC_REPO = "us_visa"
 
 setup(
-    name="us_visa",
-    version="0.0.1",
+    name=SRC_REPO,
+    version=__version__,
+    description = "This is a ML classification project to predict whether US Visa application is certified or denied",
     author="Aadarsh Kushwaha",
     author_email="aadarshkushwaha0208@gmail.com",
     packages=find_packages()
@@ -29,10 +34,11 @@ def get_requirements(file_path: str) -> List[str]:
 
 
 setup(
-    name='us_visa',
-    version='0.0.1',
-    author='Aadarsh Kushwaha',
-    author_email='aadarshkushwaha0208@gmail.com',
+    name=SRC_REPO,
+    version=__version__,
+    description = "This is a ML classification project to predict whether US Visa application is certified or denied",
+    author="Aadarsh Kushwaha",
+    author_email="aadarshkushwaha0208@gmail.com",
     packages=find_packages(),
     install_requires=get_requirements('requirements.txt')
 )
