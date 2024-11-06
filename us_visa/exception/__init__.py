@@ -1,26 +1,29 @@
-import os
 import sys
 from us_visa.logger import logging
 
-def error_message_details(error: str, error_detail: sys) -> str:
+def error_message_details(error: str, error_detail_obj: sys) -> str:
     '''
-        # exe_info() and it will give 3 info
-        1. class of exception e.g. <class 'ZeroDivisionError'>
-        2. exception/error message e.g. division by zero
-        3. traceback memory location where object likes ['tb_frame', 'tb_lasti', 'tb_lineno', 'tb_next'] is located
+    # exe_info() and it will give 3 info
+    1. class of exception e.g. <class 'ZeroDivisionError'>
+    2. exception/error message e.g. division by zero
+    3. traceback memory location where object likes ['tb_frame', 'tb_lasti', 'tb_lineno', 'tb_next'] is located
     '''
-    _, _, exc_traceback = error_detail.exc_info() 
+    # Get the traceback information from error detail_obj
+    _, _, exc_traceback = error_detail_obj.exc_info() 
 
+    # Extract the filename from the traceback 
     file_name = exc_traceback.tb_frame.f_code.co_filename
-    error_message = "Error occurred in Python script name [{0}] line number [{1}] error message [{2}]".format(
+
+    # Create a formatted error message 
+    formated_error_message = "Error occurred in Python script name [{0}] line number [{1}] error message [{2}]".format(
         file_name, exc_traceback.tb_lineno, str(error))
 
-    return error_message
+    return formated_error_message
   
 class CustomException(Exception):
-    def __init__(self, error_message, error_detail: sys):
+    def __init__(self, error_message, error_detail_obj: sys):
         super().__init__(error_message) # Call to Exception Class Constructor
-        self.error_message = error_message_details(error_message, error_detail)
+        self.error_message = error_message_details(error_message, error_detail_obj)
 
     def __str__(self):
         return self.error_message
