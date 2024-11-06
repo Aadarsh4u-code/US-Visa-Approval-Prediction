@@ -33,9 +33,9 @@ logger = logging.getLogger('us_visa')
 
 # Log message with different severity levels
 '''
-    logging.debug("This is dubug message")
-    logging.info("This is info message")
-    logging.warning("This is warning message")
-    logging.error("This is error message")
-    logging.critical("This is critical message")
-# '''
+logging.debug("This is dubug message")
+logging.info("This is info message")
+logging.warning("This is warning message")
+logging.error("This is error message")
+logging.critical("This is critical message")
+'''
