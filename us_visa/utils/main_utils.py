@@ -124,5 +124,3 @@ def drop_columns(df: DataFrame, cols: list)-> DataFrame:
     
     except Exception as e:
         raise CustomException(e, sys) from e
-
-
