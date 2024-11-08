@@ -6,7 +6,7 @@ import pandas as pd
 from us_visa.logger import logging
 from us_visa.exception import CustomException
 
-# Define an abstract class for Data Ingestor
+# Define an abstract class for Data Ingestor/ Interface
 class DataIngestor(ABC):
     @abstractmethod
     def ingest(self, path_to_data: Path) -> pd.DataFrame:
