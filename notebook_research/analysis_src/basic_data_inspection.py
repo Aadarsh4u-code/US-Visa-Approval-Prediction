@@ -27,7 +27,7 @@ class DataInspectionStrategy(ABC):
 # Concrete Strategy Class for Displaying rows of dataframe
 # -----------------------------------------------------------------
 # This strategy inspect the first n rows or default to 5 rows of dataframe
-class HeadInspectionStrategy(DataInspectionStrategy):
+class HeadInspection(DataInspectionStrategy):
     def __init__(self, n:int = None):
          """
          Initializes the strategy with the number of rows to display.
@@ -47,7 +47,7 @@ class HeadInspectionStrategy(DataInspectionStrategy):
         """
         if self.n is None:
             print("\nDefault First 5 rows")
-            print(df.head(self.n))  # Displays the default 5 rows
+            print(df.head())  # Displays the default 5 rows
         else:
             print(f"\nFirst {self.n} Rows:") 
             print(df.head(self.n)) # Displays the first n rows
@@ -56,7 +56,7 @@ class HeadInspectionStrategy(DataInspectionStrategy):
 # Concrete Strategy Class for Displaying rows of dataframe
 # -----------------------------------------------------------------
 # This strategy inspect the last n rows or default to 5 rows of dataframe
-class TailInspectionStrategy(DataInspectionStrategy):
+class TailInspection(DataInspectionStrategy):
     def __init__(self, n:int = None):
          """
          Initializes the strategy with the number of rows to display.
@@ -76,16 +76,16 @@ class TailInspectionStrategy(DataInspectionStrategy):
         """
         if self.n is None:
             print("\nDefault Last 5 rows")
-            print(df.head(self.n))  # Displays the default 5 rows
+            print(df.tail()) # Displays the default 5 rows
         else:
             print(f"\nLast {self.n} Rows:") 
-            print(df.head(self.n)) # Displays the last n rows
+            print(df.tail(self.n)) # Displays the last n rows
 
 
 # Concrete Strategy Class for Displaying Dimensions of dataframe
 # -----------------------------------------------------------------
 # This strategy inspect the shape of the dataframe
-class ShapeInspectionStrategy(DataInspectionStrategy):
+class ShapeInspection(DataInspectionStrategy):
     
     def inspect(self, df: pd.DataFrame):
 
@@ -98,14 +98,14 @@ class ShapeInspectionStrategy(DataInspectionStrategy):
         Returns:
         None: Prints the dimension of DataFrame
         """
-        print("\nShape of Dataset")
+        print(f"\nRows and Columns in dataset")
         print(df.shape)
 
 
 # Concrete Strategy Class for Data Types Inspection
 # -------------------------------------------------
 # This strategy inspects the data types of each column and counts non-null values.
-class DataTypesInspectionStrategy(DataInspectionStrategy):
+class DataTypesInspection(DataInspectionStrategy):
     def inspect(self, df: pd.DataFrame):
         """
         Inspects and prints the data types and non-null counts of the dataframe columns.
@@ -123,7 +123,7 @@ class DataTypesInspectionStrategy(DataInspectionStrategy):
 # Concrete Strategy class for Summary Statistics Inspection
 # -----------------------------------------------------
 # This strategy provides summary statistics for both numerical and categorical features.
-class SummaryStatisticsInspectionStrategy(DataInspectionStrategy):
+class SummaryStatisticsInspection(DataInspectionStrategy):
     def inspect(self, df: pd.DataFrame):
         """
         Prints summary statistics for numerical and categorical features.
@@ -143,7 +143,7 @@ class SummaryStatisticsInspectionStrategy(DataInspectionStrategy):
 # Concrete Strategy class for Numerical Features
 # ----------------------------------------------
 # This strategy inspect number of numerical feature in DataFrame
-class NumericalFeatureInspectionStrategy(DataInspectionStrategy):
+class NumericalFeatureInspection(DataInspectionStrategy):
     """
     Prints and returns the numerical features present in DataFrame
 
@@ -162,7 +162,7 @@ class NumericalFeatureInspectionStrategy(DataInspectionStrategy):
 # Concrete Strategy class for Categorical Features
 # ----------------------------------------------
 # This strategy inspect number of categorical feature in DataFrame
-class CategoricalFeatureInspectionStrategy(DataInspectionStrategy):
+class CategoricalFeatureInspection(DataInspectionStrategy):
     """
     Prints and returns the categorical features present in DataFrame
 
@@ -180,7 +180,7 @@ class CategoricalFeatureInspectionStrategy(DataInspectionStrategy):
 # Concrete Strategy class for Proportion of count data on Categorical Features
 # ----------------------------------------------
 # This strategy inspect number of categorical feature in DataFrame
-class ProportionCatFeatureInspectionStrategy(DataInspectionStrategy):
+class ProportionFeatureInspection(DataInspectionStrategy):
     """
     Prints the Proportion of count data on categorical column
 
@@ -200,7 +200,7 @@ class ProportionCatFeatureInspectionStrategy(DataInspectionStrategy):
 # Concrete Strategy class for number of count of value on Categorical Features
 # ----------------------------------------------
 # This strategy inspect number of value on categorical feature in DataFrame
-class ProportionCatFeatureInspectionStrategy(DataInspectionStrategy):
+class ValueCountFeatureInspection(DataInspectionStrategy):
     """
     Prints the number of value present on categorical column
 
@@ -213,31 +213,14 @@ class ProportionCatFeatureInspectionStrategy(DataInspectionStrategy):
     def inspect(self, df: pd.DataFrame):
         categorical_features = [feature for feature in df.columns if df[feature].dtype == 'O']
         for feature in categorical_features:
-            print(df[feature].value_counts(normalize=True))
+            print(df[feature].value_counts())
             print("**************************************")
 
 
 # Concrete Strategy class for Null Values Inspection
 # ----------------------------------------------
 # This strategy inspect to find number of null value in each column of dataframe
-class ValueCountFeatureInspectionStrategy(DataInspectionStrategy):
-    """
-    Prints the number of null value present on each column
-
-    Parameters:
-    df (pd.DataFrame): The dataframe to be inspected
-
-    Returns:
-    None: Prints the total number of null value in each feature of dataframe
-    """
-    def inspect(self, df: pd.DataFrame):
-        print("\nNumber of Null Values in each feature:")
-        print(df.isnull().sum())
-
-# Concrete Strategy class for Null Values Inspection
-# ----------------------------------------------
-# This strategy inspect to find number of null value in each column of dataframe
-class IsNullFeatureInspectionStrategy(DataInspectionStrategy):
+class IsNullFeatureInspection(DataInspectionStrategy):
     """
     Prints the number of null value present on each column
 
@@ -255,7 +238,7 @@ class IsNullFeatureInspectionStrategy(DataInspectionStrategy):
 # Concrete Strategy class for Duplicated Values Inspection
 # ----------------------------------------------
 # This strategy inspect to find number of duplicated value in each column of dataframe
-class DuplicatedFeatureInspectionStrategy(DataInspectionStrategy):
+class DuplicatedFeatureInspection(DataInspectionStrategy):
     """
     Prints the number of Duplicated value present on each column
 
@@ -266,14 +249,14 @@ class DuplicatedFeatureInspectionStrategy(DataInspectionStrategy):
     None: Prints the total number of Duplicated value in each feature of dataframe
     """
     def inspect(self, df: pd.DataFrame):
-        print("\nNumber of Null Values in each feature:")
+        print("\nSummary of Duplicated Values in each feature:")
         print(df.duplicated().sum())
 
 
 # Concrete Strategy class for unique value inspection 
 # ----------------------------------------------
 # This strategy inspect number of unique value in each feature of dataframe
-class NuUniqueValueInspectionStrategy(DataInspectionStrategy):
+class NuUniqueValueInspection(DataInspectionStrategy):
     """
     Prints the number of unique value present on each column
 
@@ -290,7 +273,7 @@ class NuUniqueValueInspectionStrategy(DataInspectionStrategy):
 # Concrete Strategy class for display unique value inspection 
 # ----------------------------------------------
 # This strategy inspect unique value in each feature of dataframe
-class UniqueColValueInspectionStrategy(DataInspectionStrategy):
+class DisplayUniqueCatValueInspection(DataInspectionStrategy):
     """
     Prints the unique value present on each column
 
@@ -326,7 +309,7 @@ class DataInspector:
         """
 
         # Print kwargs to see the additional arguments passed
-        print("Additional arguments (kwargs):", kwargs)
+        # print("Additional arguments (kwargs):", kwargs)
         self._strategy = strategy_class(**kwargs)
         self._strategy.inspect(df)
 
