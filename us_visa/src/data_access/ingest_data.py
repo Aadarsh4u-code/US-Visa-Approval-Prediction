@@ -10,7 +10,7 @@ from us_visa.exception import CustomException
 class DataIngestor(ABC):
     @abstractmethod
     def ingest(self, path_to_data: Path) -> pd.DataFrame:
-        '''Abstract method to ingest data from a given file.'''
+        """Abstract method to ingest data from a given file."""
         pass
 
 PATH_TO_EXTRACTED_DATA = r"us_visa/data/extracted_data"
@@ -20,7 +20,7 @@ class ZipDataIngestor(DataIngestor):
     logging.info("Enter in ZipDataIngestor class")
 
     def ingest(self, file_path: Path) -> pd.DataFrame:
-        '''Extract a .zip file and returns the content as a pandas Dataframe.'''
+        """Extract a .zip file and returns the content as a pandas Dataframe."""
         # Ensure the file is .zip
         if not file_path.endswith(".zip"):
             raise ValueError("The provided file is not a .zip file.")
@@ -58,7 +58,7 @@ class JsonDataIngestor(DataIngestor):
 class DataIngestorFactory:
     @staticmethod
     def get_data_ingestor(file_extension: str) -> DataIngestor:
-        '''Returns the appropriate DataIngestor based on file extension.'''
+        "Returns the appropriate DataIngestor based on file extension."
         if file_extension == '.zip':
             return ZipDataIngestor()
         elif file_extension == '.json':
