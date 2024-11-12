@@ -156,6 +156,7 @@ class NumericalFeatureInspection(DataInspectionStrategy):
     def inspect(self, df: pd.DataFrame):
         numerical_features = [feature for feature in df.columns if df[feature].dtype != 'O']
         print(f"This dataset has {len(numerical_features)} Numerical Features and they are : {numerical_features}")
+        return numerical_features
     
 
 
@@ -175,6 +176,7 @@ class CategoricalFeatureInspection(DataInspectionStrategy):
     def inspect(self, df: pd.DataFrame):
         categorical_features = [feature for feature in df.columns if df[feature].dtype == 'O']
         print(f"This dataset has {len(categorical_features)} Categorical Features and they are : {categorical_features}")
+        return categorical_features
 
 
 # Concrete Strategy class for Proportion of count data on Categorical Features
@@ -311,7 +313,7 @@ class DataInspector:
         # Print kwargs to see the additional arguments passed
         # print("Additional arguments (kwargs):", kwargs)
         self._strategy = strategy_class(**kwargs)
-        self._strategy.inspect(df)
+        return self._strategy.inspect(df)
 
 
 # # Usage example
