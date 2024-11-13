@@ -42,7 +42,7 @@ class NumericalUnivariateAnalysis(UnivariateAnalysisStrategy):
         Returns:
         None: Displays a specific plot.
         """
-        plt.figure(figsize=(10, 6), dpi = 200)
+        plt.figure(figsize=(6, 4), dpi = 200)
 
         plot_functions = {
             'histogram': self.histogram,
@@ -66,7 +66,7 @@ class NumericalUnivariateAnalysis(UnivariateAnalysisStrategy):
             raise CustomException(f"Unsupported plot type '{plot_type}' for numerical analysis.", sys)
         
     def histogram(self, df, feature):
-        sns.histplot(df[feature], kde=True, bins=30)
+        sns.histplot(df[feature], kde=True, bins=50)
         plt.title(f"Histogram of {feature}")
         plt.xlabel(feature)
         plt.ylabel("Frequency")
@@ -117,7 +117,7 @@ class CategoricalUnivariateAnalysis(UnivariateAnalysisStrategy):
         Returns:
         None: Displays a bar plot showing the frequency of each category.
         """
-        plt.figure(figsize=(10, 6), dpi = 200)
+        plt.figure(figsize=(6, 4), dpi = 200)
 
         plot_functions = {
             'bar': self.bar,
@@ -192,17 +192,73 @@ class MultipleUnivariantAnalysis(UnivariateAnalysisStrategy):
         df (pd.DataFrame): The dataframe containing the data.
         """
         n_rows = (len(self.features) + self.n_cols - 1) // self.n_cols  # Calculate required rows
-        plt.figure(figsize=(self.n_cols * 5, n_rows * 4))
+        fig, axes = plt.subplots(n_rows, self.n_cols, figsize=(self.n_cols * 5, n_rows * 5), dpi=200)
+        axes = axes.flatten()
 
-        for i, feature in enumerate(self.features, 1):
-            plt.subplot(n_rows, self.n_cols, i)
-            if pd.api.types.is_numeric_dtype(df[feature]):
-                NumericalUnivariateAnalysis().analyze(df, feature, self.plot_type)
+        # Dictionary to handle different plot types
+        plot_functions = {
+            'histogram': self.histogram,
+            'boxplot': self.boxplot,
+            'density': self.density,
+            'violin': self.violin,
+            'kde': self.kde,
+            'bar': self.bar,
+            'pie': self.pie,
+            'count': self.count
+        }
+
+        for i, feature in enumerate(self.features):
+            ax = axes[i]
+            # The := operator is a concise way to assign and check a variable at the same time.
+            if plot_func := plot_functions.get(self.plot_type):
+                plot_func(df, feature, ax)  # Pass the axis to each plotting function
+                ax.set_title(f"{self.plot_type.title()} of {feature}")
+                ax.set_xlabel(feature)
+                ax.set_ylabel("Density" if pd.api.types.is_numeric_dtype(df[feature]) else "Frequency")
+
+                
+                
             else:
-                CategoricalUnivariateAnalysis().analyze(df, feature, self.plot_type)
-        
-        plt.tight_layout()
+                logging.warning(f"Unsupported plot type '{self.plot_type}' for feature '{feature}'.")
+
+        # Hide any unused subplots
+        for j in range(i + 1, len(axes)):
+            fig.delaxes(axes[j])
+
+        fig.tight_layout()
         plt.show()
+
+
+    def histogram(self, df, feature, ax):
+        sns.histplot(df[feature], kde=True, bins=50, ax=ax)
+
+    def boxplot(self, df, feature, ax):
+        sns.boxplot(x=df[feature], ax=ax)
+
+    def density(self, df, feature, ax):
+        sns.kdeplot(df[feature], fill=True, ax=ax)
+
+    def violin(self, df, feature, ax):
+        sns.violinplot(x=df[feature], ax=ax)
+
+    def kde(self, df, feature, ax):
+        sns.kdeplot(df[feature], shade=True, ax=ax)
+
+    def bar(self, df, feature, ax):
+        p = sns.countplot(x=feature, data=df, ax=ax, palette="muted")
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+
+        # Add labels to each bar
+        for patch in p.patches:
+            height = patch.get_height()
+            ax.text(patch.get_x() + patch.get_width() / 2., height, f'{int(height)}', ha='center', va='bottom')
+
+    def pie(self, df, feature, ax):
+        df[feature].value_counts().plot.pie(autopct='%1.1f%%', startangle=90, counterclock=False, ax=ax)
+        ax.set_ylabel("")
+
+    def count(self, df, feature, ax):
+        sns.countplot(x=feature, data=df, ax=ax, palette="muted")
 
 
 # Context Class that uses a UnivariateAnalysisStrategy
