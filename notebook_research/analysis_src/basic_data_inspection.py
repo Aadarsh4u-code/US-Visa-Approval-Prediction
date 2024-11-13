@@ -196,7 +196,7 @@ class ProportionFeatureInspection(DataInspectionStrategy):
         categorical_features = [feature for feature in df.columns if df[feature].dtype == 'O']
         for feature in categorical_features:
             print(df[feature].value_counts(normalize=True)*100)
-            print("**************************************")
+            print("-------------------------------------------")
 
 
 # Concrete Strategy class for number of count of value on Categorical Features
@@ -216,7 +216,7 @@ class ValueCountFeatureInspection(DataInspectionStrategy):
         categorical_features = [feature for feature in df.columns if df[feature].dtype == 'O']
         for feature in categorical_features:
             print(df[feature].value_counts())
-            print("**************************************")
+            print("-------------------------------------------")
 
 
 # Concrete Strategy class for Null Values Inspection

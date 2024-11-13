@@ -81,6 +81,7 @@ class SimpleMissingValuesAnalysis(MissingValuesAnalysisTemplate):
         plt.figure(figsize=(12, 8), dpi = 200)
         sns.heatmap(df.isnull(), cbar=False, cmap="viridis")
         plt.title("Missing Values Heatmap")
+        plt.tight_layout()
         plt.show()
 
 # Example usage
