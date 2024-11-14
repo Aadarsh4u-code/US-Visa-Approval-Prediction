@@ -192,7 +192,7 @@ class MultipleUnivariantAnalysis(UnivariateAnalysisStrategy):
         df (pd.DataFrame): The dataframe containing the data.
         """
         n_rows = (len(self.features) + self.n_cols - 1) // self.n_cols  # Calculate required rows
-        fig, axes = plt.subplots(n_rows, self.n_cols, figsize=(self.n_cols * 5, n_rows * 5), dpi=200)
+        fig, axes = plt.subplots(n_rows, self.n_cols, figsize=(self.n_cols * 6, n_rows * 5), dpi=200)
         axes = axes.flatten()
 
         # Dictionary to handle different plot types
@@ -215,9 +215,7 @@ class MultipleUnivariantAnalysis(UnivariateAnalysisStrategy):
                 ax.set_title(f"{self.plot_type.title()} of {feature}")
                 ax.set_xlabel(feature)
                 ax.set_ylabel("Density" if pd.api.types.is_numeric_dtype(df[feature]) else "Frequency")
-
-                
-                
+ 
             else:
                 logging.warning(f"Unsupported plot type '{self.plot_type}' for feature '{feature}'.")
 
@@ -258,7 +256,11 @@ class MultipleUnivariantAnalysis(UnivariateAnalysisStrategy):
         ax.set_ylabel("")
 
     def count(self, df, feature, ax):
-        sns.countplot(x=feature, data=df, ax=ax, palette="muted")
+        p = sns.countplot(x=feature, data=df, ax=ax, palette="muted")
+        # Add labels to each bar
+        for patch in p.patches:
+            height = patch.get_height()
+            ax.text(patch.get_x() + patch.get_width() / 2., height, f'{int(height)}', ha='center', va='bottom')
 
 
 # Context Class that uses a UnivariateAnalysisStrategy
