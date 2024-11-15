@@ -168,9 +168,8 @@ class CategoricalUnivariateAnalysis(UnivariateAnalysisStrategy):
 
 # Concrete Strategy for Multiple Feature  Univariate Analysis Strategy
 # ----------------------------------------------
-# This class allows to display multiple feature into a single frame.
-
-class MultipleUnivariantAnalysis(UnivariateAnalysisStrategy):
+# This class allows to display multiple feature into a single frame i.e. subplots.
+class MultiPlotUnivariantAnalysis(UnivariateAnalysisStrategy):
     def __init__(self, features: list, n_cols:int = 2, plot_type = 'histogram'):
         """
         Initializes with a list of features and the number of columns for subplots.
@@ -292,7 +291,7 @@ class UnivariateAnalyzer:
         """
         if features:
             # Use MultipleUnivariateAnalysis for multiple features in a grid layout
-            self._strategy = MultipleUnivariantAnalysis(features, n_cols, plot_type)
+            self._strategy = MultiPlotUnivariantAnalysis(features, n_cols, plot_type)
             self._strategy.analyze(df)
         elif feature:
             # Automatically select the strategy based on the feature's data type
@@ -303,7 +302,7 @@ class UnivariateAnalyzer:
                 self._strategy = CategoricalUnivariateAnalysis()
                 self._strategy.analyze(df, feature, plot_type)
         
-    
+# Example usage   
 # if __name__ == "__main__":
 #     df = pd.read_csv("/Users/aadarsh/Desktop/Data Scientist/Projects/US-Visa-Approval-Prediction/us_visa/data/extracted_data/EasyVisa.csv")
 
