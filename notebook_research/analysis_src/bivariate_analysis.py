@@ -50,6 +50,7 @@ class NumericalVsNumericalBivariateAnalysis(BivariateAnalysisStrategy):
         plt.figure(figsize=(6, 4), dpi=200)
 
         plot_functions = {
+            'histogram': self.histogram,
             'scatter': self.scatter,
             'line': self.line,
             'hexbin': self.hexbin,
@@ -60,7 +61,26 @@ class NumericalVsNumericalBivariateAnalysis(BivariateAnalysisStrategy):
             plot_func(df, feature_x, feature_y, hue)
         else:
             raise CustomException(f"Unsupported plot type '{plot_type}' for numerical vs. numerical bivariate analysis.", sys)
-        
+    
+    def histogram(self, df, feature_x, feature_y, hue=None):
+        """
+        Plot histograms for numerical vs numerical features.
+
+        Parameters:
+        df (pd.DataFrame): Dataframe containing the data.
+        feature_x (str): First numerical feature.
+        feature_y (str): Second numerical feature.
+        hue (str, optional): Categorical feature to group the data.
+        """
+        if hue:
+            sns.histplot(data=df, x=feature_x, hue=hue, kde=True, bins=50, multiple='stack')
+        else:
+            sns.histplot(data=df, x=feature_x, kde=True, bins=50, color='blue')
+        plt.title(f"Histogram of {feature_x}" + (f" with hue {hue}" if hue else ""))
+        plt.xlabel(feature_x)
+        plt.ylabel("Frequency")
+        plt.tight_layout()
+        plt.show()
 
     def scatter(self, df, feature_x, feature_y, hue=None):
         sns.scatterplot(data=df, x=feature_x, y=feature_y, hue=hue)
@@ -112,11 +132,10 @@ class NumericalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
         plt.figure(figsize=(6, 4), dpi=200)
 
         plot_functions = {
-            'box': self.box,
+            'boxplot': self.boxplot,
             'violin': self.violin,
-            'swarm': self.swarm,
-            'strip': self.strip,
-            'boxplot': self.boxplot
+            'barplot': self.barplot,
+            'lineplot': self.lineplot
         }
         
         plot_func = plot_functions.get(plot_type)
@@ -125,18 +144,10 @@ class NumericalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
         else:
             raise CustomException(f"Unsupported plot type '{plot_type}' for numerical vs. categorical bivariate analysis.", sys)
         
-    def box(self, df, feature_x, feature_y, hue=None):
+    def boxplot(self, df, feature_x, feature_y, hue=None):
         sns.boxplot(x=feature_y, y=feature_x, data=df, hue=hue)
         plt.title(f"Box Plot of {feature_x} grouped by {feature_y}")
         plt.xticks(rotation=45)
-        plt.tight_layout()
-        plt.show()
-
-    def boxplot(self, df, feature_x, feature_y, hue=None):
-        clr1 = ['#1E90FF', '#DC143C']
-        sns.boxplot(data=df, x=df[feature_x], y=df[feature_y], palette=clr1)
-        plt.title(f"Box Plot of {feature_x} grouped by {feature_y}")
-        plt.xlabel(feature_x)
         plt.tight_layout()
         plt.show()
 
@@ -147,19 +158,26 @@ class NumericalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
         plt.tight_layout()
         plt.show()
 
-    def swarm(self, df, feature_x, feature_y, hue=None):
-        sns.swarmplot(x=feature_y, y=feature_x, data=df, hue=hue)
-        plt.title(f"Swarm Plot of {feature_x} grouped by {feature_y}")
+    def barplot(self, df, feature_x, feature_y, hue=None):
+        plt.figure(figsize=(6, 6), dpi=200)
+        p = sns.barplot(data=df, x=feature_y, y=feature_x, hue=hue)
+        # Add labels to each bar
+        for patch in p.patches:
+            height = patch.get_height()
+            p.text(patch.get_x() + patch.get_width() / 2., height, f'{int(height)}', ha='center', va='bottom')
+        plt.title(f"Bar Plot of {feature_x} grouped by {feature_y}")
         plt.xticks(rotation=45)
         plt.tight_layout()
         plt.show()
 
-    def strip(self, df, feature_x, feature_y, hue=None):
-        sns.stripplot(x=feature_y, y=feature_x, data=df, hue=hue)
-        plt.title(f"Strip Plot of {feature_x} grouped by {feature_y}")
+    def lineplot(self, df, feature_x, feature_y, hue=None):
+        sns.lineplot(data=df, x=feature_y, y=feature_x, hue=hue, marker="o")
+        plt.title(f"Line Plot of {feature_x} grouped by {feature_y}")
         plt.xticks(rotation=45)
         plt.tight_layout()
         plt.show()
+
+
 
 # Concrete Strategy for Categorical vs Categorical Analysis
 # --------------------------------------------------------
@@ -249,13 +267,16 @@ class BivariateAnalyzer:
 #     bivariate_analyzer = BivariateAnalyzer()
 
     # Example: Numerical vs Numerical
-    # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='yr_of_estab', plot_type='scatter', hue='case_status')
+    # bivariate_analyzer.execute_analysis(df, feature_x='yr_of_estab', feature_y='prevailing_wage', plot_type='correlation_heatmap', hue='case_status')
 
     # Example: Numerical vs Categorical
-    # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='full_time_position', plot_type='violin', hue='case_status')
+    # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='has_job_experience', plot_type='boxplot', hue='case_status')
+    # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='has_job_experience', plot_type='violin', hue='case_status')
+    # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='has_job_experience', plot_type='lineplot', hue='case_status')
+    # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='has_job_experience', plot_type='barplot', hue='case_status')
 
     # Example: Categorical vs Categorical
-    # bivariate_analyzer.execute_analysis(df, feature_x='full_time_position', feature_y='case_status', plot_type='grouped_bar')
+    # bivariate_analyzer.execute_analysis(df, feature_x='region_of_employment', feature_y='unit_of_wage', plot_type='stacked_bar', hue='case_status')
 
 
 
