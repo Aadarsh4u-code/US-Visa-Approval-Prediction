@@ -198,7 +198,7 @@ class CategoricalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
         None: Displays a specific plot.
         """
 
-        plt.figure(figsize=(6, 4), dpi=200)
+        plt.figure(figsize=(8, 6), dpi=200)
         
         plot_functions = {
             'stacked_bar': self.stacked_bar,
@@ -211,6 +211,7 @@ class CategoricalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
         else:
             raise CustomException(f"Unsupported plot type '{plot_type}' for categorical vs. categorical analysis.", sys)
 
+    # Compares two categorical features.
     def stacked_bar(self, df, feature_x, feature_y, hue=None):
         cross_tab = pd.crosstab(df[feature_x], df[feature_y], normalize='index')
         cross_tab.plot(kind='bar', stacked=True, colormap='viridis')
@@ -221,6 +222,7 @@ class CategoricalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
         plt.tight_layout()
         plt.show()
 
+    # Shows grouped frequency distributions.
     def grouped_bar(self, df, feature_x, feature_y, hue=None):
         cross_tab = pd.crosstab(df[feature_x], df[feature_y])
          # Create the bar plot
@@ -270,7 +272,7 @@ class BivariateAnalyzer:
     # bivariate_analyzer.execute_analysis(df, feature_x='yr_of_estab', feature_y='prevailing_wage', plot_type='correlation_heatmap', hue='case_status')
 
     # Example: Numerical vs Categorical
-    # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='has_job_experience', plot_type='boxplot', hue='case_status')
+    # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='continent', plot_type='boxplot', hue='case_status')
     # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='has_job_experience', plot_type='violin', hue='case_status')
     # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='has_job_experience', plot_type='lineplot', hue='case_status')
     # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='has_job_experience', plot_type='barplot', hue='case_status')

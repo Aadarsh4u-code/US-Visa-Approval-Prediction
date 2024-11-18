@@ -24,4 +24,5 @@ jinja2
 python-multipart
 python-box
 types-PyYAML
+statsmodels
 -e .

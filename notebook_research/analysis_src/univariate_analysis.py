@@ -64,7 +64,8 @@ class NumericalUnivariateAnalysis(UnivariateAnalysisStrategy):
             # self.histogram(df, feature) based on plot type
         else:
             raise CustomException(f"Unsupported plot type '{plot_type}' for numerical analysis.", sys)
-        
+    
+    # Shows the distribution of the data.  
     def histogram(self, df, feature):
         sns.histplot(df[feature], kde=True, bins=50)
         plt.title(f"Histogram of {feature}")
@@ -73,6 +74,7 @@ class NumericalUnivariateAnalysis(UnivariateAnalysisStrategy):
         plt.tight_layout()
         plt.show()
 
+    # Identifies outliers and the spread of the data.
     def boxplot(self, df, feature):
         sns.boxplot(x=df[feature])
         plt.title(f"Box Plot of {feature}")
@@ -80,6 +82,7 @@ class NumericalUnivariateAnalysis(UnivariateAnalysisStrategy):
         plt.tight_layout()
         plt.show()
 
+    # A smooth curve that shows data distribution.
     def density(self, df, feature):
         sns.kdeplot(df[feature], fill=True)
         plt.title(f"Density Plot of {feature}")
@@ -87,6 +90,7 @@ class NumericalUnivariateAnalysis(UnivariateAnalysisStrategy):
         plt.tight_layout()
         plt.show()
 
+    # Combines box plot and density plot features.
     def violin(self, df, feature):
         sns.violinplot(x=df[feature])
         plt.title(f"Violin Plot of {feature}")
@@ -94,6 +98,7 @@ class NumericalUnivariateAnalysis(UnivariateAnalysisStrategy):
         plt.tight_layout()
         plt.show()
 
+    # KDE (Kernel Density Estimate) Plot - Visualizes the probability density function.
     def kde(self, df, feature):
         sns.kdeplot(df[feature], shade=True)
         plt.title(f"KDE Plot of {feature}")
@@ -136,6 +141,7 @@ class CategoricalUnivariateAnalysis(UnivariateAnalysisStrategy):
         else:
             raise CustomException(f"Unsupported plot type '{plot_type}' for categorical analysis.", sys)
         
+    # Shows the frequency of categories.
     def bar(self, df, feature):
         sns.countplot(x=feature, data=df, palette="muted")
         plt.title(f"Bar Plot of {feature}")
@@ -145,6 +151,7 @@ class CategoricalUnivariateAnalysis(UnivariateAnalysisStrategy):
         plt.tight_layout()
         plt.show()
 
+    # Represents proportions of categories.
     def pie(self, df, feature):
         df[feature].value_counts().plot.pie(autopct='%1.1f%%', startangle=90, counterclock=False)
         plt.title(f"Pie Chart of {feature}")
@@ -152,6 +159,7 @@ class CategoricalUnivariateAnalysis(UnivariateAnalysisStrategy):
         plt.tight_layout()
         plt.show()
 
+    # Counts of each category.
     def count(self, df, feature):
         sns.countplot(x=feature, data=df, palette="muted")
         plt.title(f"Count Plot of {feature}")
@@ -161,6 +169,7 @@ class CategoricalUnivariateAnalysis(UnivariateAnalysisStrategy):
         plt.tight_layout()
         plt.show()
 
+    # Displays counts of each category in tabular form.
     def frequency_table(self, df, feature):
         frequency_table = df[feature].value_counts()
         print(f"\nFrequency Table for {feature}:\n{frequency_table}")

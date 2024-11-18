@@ -290,6 +290,21 @@ class DisplayUniqueCatValueInspection(DataInspectionStrategy):
         print(df.apply(lambda col: col.unique()))
 
 
+class DiscreteNumericalFeature(DataInspectionStrategy):
+    def inspect(self, df: pd.DataFrame):
+        numerical_features = [feature for feature in df.columns if df[feature].dtype != 'O']
+        discrete_feature = [feature for feature in numerical_features if len(df[feature].unique()) <= 25]
+        print(f"We have {len(discrete_feature)} discrete feature :", discrete_feature)
+        return discrete_feature
+    
+class ContinuousNumericalFeature(DataInspectionStrategy):
+    def inspect(self, df: pd.DataFrame):
+        numerical_features = [feature for feature in df.columns if df[feature].dtype != 'O']
+        continuous_features = [feature for feature in numerical_features if len(df[feature].unique()) > 25]
+        print(f"We have {len(continuous_features)} continuous feature :", continuous_features)
+        return continuous_features
+
+
 # Context Class that uses a DataInspectionStrategy
 # ------------------------------------------------
 # This class allows you to switch between different data inspection strategies.
