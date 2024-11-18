@@ -9,6 +9,8 @@ import statsmodels.api as sm
 from scipy.stats import chi2_contingency
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
+from us_visa.utils.main_utils import separate_numerical_and_categorical
+
 
 # Abstract Base Class for MultiCollinearity Inspections Strategy
 # -----------------------------------------------------
@@ -30,13 +32,17 @@ class MultiCollinearityInspectionStrategy(ABC):
 class NumericalMultiCollinearityInspection(MultiCollinearityInspectionStrategy):
     def inspect(self, df: pd.DataFrame, correlation_threshold: float = None, vif_threshold: float = None, target_column: str = None):
         logging.info("Inspecting numerical collinearity:")
-        
+        try:
+            numerical_df, _ = separate_numerical_and_categorical(df)
+            df = numerical_df
+        except:
+            raise CustomException("Given dataframe features should be numeric", sys)
+        print('df numeric',df)
         # Calculate and display the correlation matrix
         corr_data = self.plot_correlation_matrix(df, correlation_threshold)
         
         # Calculate and display the VIF
         vif_data = self.calculate_vif(df, vif_threshold)
-        
         return corr_data, vif_data
     
     def plot_correlation_matrix(self, df: pd.DataFrame, threshold: float):
@@ -79,8 +85,6 @@ class NumericalMultiCollinearityInspection(MultiCollinearityInspectionStrategy):
         df = pd.DataFrame(data=value, index=feature, columns=['corr value'])
         return df
     
-    
-
     def calculate_vif(self, df: pd.DataFrame, threshold: float):
         """
         Calculate and return the Variance Inflation Factor (VIF) and filter by the threshold.
@@ -108,11 +112,15 @@ class NumericalMultiCollinearityInspection(MultiCollinearityInspectionStrategy):
         return vif_data
 
 # Concrete Strategy for Categorical Collinearity
-class CategoricalMultiCollinearity(MultiCollinearityInspectionStrategy):
+class CategoricalMultiCollinearityInspection(MultiCollinearityInspectionStrategy):
     
     def inspect(self, df: pd.DataFrame, correlation_threshold: float = None, vif_threshold: float = None, target_column: str = None):
         logging.info("Inspecting categorical collinearity:")
-        self.check_categorical_dependence(df, target_column)
+        try:
+            _, categorical_df = separate_numerical_and_categorical(df)
+            self.check_categorical_dependence(categorical_df, target_column)
+        except:
+            raise CustomException("Given dataframe features should be categorical", sys)
 
     def check_categorical_dependence(self, df: pd.DataFrame, target_column):
         """
@@ -152,13 +160,25 @@ class CategoricalMultiCollinearity(MultiCollinearityInspectionStrategy):
 
 # Context Class to Use the Strategy
 class  MultiCollinearityInspector:
-    def __init__(self, strategy: MultiCollinearityInspectionStrategy):
+    def __init__(self, strategy: MultiCollinearityInspectionStrategy = None):
+        # Initialize with a default strategy or None
         self._strategy = strategy   
 
-    def execute_inspection(self, df: pd.DataFrame, correlation_threshold: float, vif_threshold: float, target_column: str):
+    def set_strategy(self, strategy: MultiCollinearityInspectionStrategy):
+        """
+        Set or change the strategy dynamically.
+        
+        Parameters:
+        strategy (MultiCollinearityInspectionStrategy): The strategy to set.
+        """
+        self._strategy = strategy
+
+    def execute_inspection(self, df: pd.DataFrame, correlation_threshold: float = None, vif_threshold: float = None, target_column: str = None):
+        if self._strategy is None:
+            raise CustomException("Strategy is not set. Use `set_strategy` to set a strategy before executing inspection.")
         return self._strategy.inspect(df, correlation_threshold, vif_threshold, target_column)
 
-
+"""
 # Example usage
 if __name__ == "__main__":
     df = pd.read_csv("/Users/aadarsh/Desktop/Data Scientist/Projects/US-Visa-Approval-Prediction/us_visa/data/extracted_data/EasyVisa.csv")
@@ -166,24 +186,25 @@ if __name__ == "__main__":
     correlation_threshold = 0.8
     vif_threshold = 5.0
     target_column = 'case_status'
-    """
-    # Choose strategy (Numerical or Categorical)
-    numerical_multicollinearity_strategy = NumericalMultiCollinearityInspection()  # Or CategoricalCollinearity()
 
-    # Instantiate the inspector with the chosen strategy
-    numerical_multicollinearity = MultiCollinearityInspector(numerical_multicollinearity_strategy)
-    
-    # Perform inspection with user-defined values
-    corr_data, vif_data = numerical_multicollinearity.execute_inspection(df[['no_of_employees', 'yr_of_estab', 'prevailing_wage']], correlation_threshold, vif_threshold, target_column)
-    
-    # Display the results if needed
-    print("Correlation Data:")
-    print(corr_data)
-    print("VIF Data:")
-    print(vif_data)
-    """
-    categorical_multicollinearity_strategy = CategoricalMultiCollinearity()
-    categorical_multicollinearity = MultiCollinearityInspector(categorical_multicollinearity_strategy)
-    result = categorical_multicollinearity.execute_inspection(df[[col for col in df.columns if col not in ['no_of_employees', 'yr_of_estab', 'prevailing_wage']]],correlation_threshold, vif_threshold, target_column)
-    print(result)
+     # Initialize the context class without a strategy
+    inspector = MultiCollinearityInspector()
 
+    # categorical_strategy = CategoricalMultiCollinearityInspection()
+    # inspector.set_strategy(categorical_strategy)
+    
+    # # Select categorical columns for inspection
+    # categorical_columns = [col for col in df.columns if col not in ['no_of_employees', 'yr_of_estab', 'prevailing_wage']]  # Replace with your actual columns
+    # inspector.execute_inspection(
+    #     df[categorical_columns], 
+    #     target_column=target_column
+    # )
+
+    # inspector.set_strategy(NumericalMultiCollinearityInspection())
+    # inspector.execute_inspection(df, correlation_threshold, vif_threshold, target_column)
+    
+    inspector.set_strategy(CategoricalMultiCollinearityInspection())
+    inspector.execute_inspection(df, correlation_threshold, vif_threshold, target_column)
+
+"""
+    

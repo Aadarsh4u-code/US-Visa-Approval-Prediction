@@ -7,6 +7,7 @@ from box.exceptions import BoxValueError
 from pathlib import Path
 from pandas import DataFrame
 import numpy as np
+import pandas as pd
 
 from us_visa.exception import CustomException
 from us_visa.logger import logging
@@ -122,5 +123,31 @@ def drop_columns(df: DataFrame, cols: list)-> DataFrame:
         logging.info("Exited the drop_columns method of utils")
         return dataframe
     
+    except Exception as e:
+        raise CustomException(e, sys) from e
+
+
+
+def separate_numerical_and_categorical(df: pd.DataFrame):
+    logging.info("Entered the separate_numerical_and_categorical method of utils")
+    """
+    Separates numerical and categorical features from the given DataFrame.
+
+    Parameters:
+    df (pd.DataFrame): The input DataFrame.
+
+    Returns:
+    tuple: A tuple containing:
+        - numerical_df (pd.DataFrame): DataFrame containing only numerical columns.
+        - categorical_df (pd.DataFrame): DataFrame containing only categorical columns.
+    """
+    try:
+        # Select numerical columns
+        numerical_df = df.select_dtypes(include=['number'])
+        
+        # Select categorical columns
+        categorical_df = df.select_dtypes(include=['object', 'category'])
+        
+        return numerical_df, categorical_df
     except Exception as e:
         raise CustomException(e, sys) from e
