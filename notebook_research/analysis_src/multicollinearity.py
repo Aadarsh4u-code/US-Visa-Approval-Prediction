@@ -37,7 +37,7 @@ class NumericalMultiCollinearityInspection(MultiCollinearityInspectionStrategy):
             df = numerical_df
         except:
             raise CustomException("Given dataframe features should be numeric", sys)
-        print('df numeric',df)
+
         # Calculate and display the correlation matrix
         corr_data = self.plot_correlation_matrix(df, correlation_threshold)
         
@@ -50,7 +50,11 @@ class NumericalMultiCollinearityInspection(MultiCollinearityInspectionStrategy):
         Plot the correlation matrix and return a filtered list of correlated features based on the threshold.
         """
         correlation_matrix = df.corr()
-        correlated_features = self.get_correlated_feature(correlation_matrix, threshold)
+
+        """
+        This get_correlated_feature function will be use when target feature is numerical
+        """
+        # correlated_features = self.get_correlated_feature(correlation_matrix, threshold)
         
         # Plot the correlation heatmap
         plt.figure(figsize=(10, 8))
@@ -58,14 +62,15 @@ class NumericalMultiCollinearityInspection(MultiCollinearityInspectionStrategy):
         plt.title("Correlation Matrix")
         plt.show()
         
-        return correlated_features
+        # return correlation_matrix
+        # return correlated_features
     
     def get_correlated_feature(self, corr_data, threshold):
         """
         Filter and return features that have a correlation value greater than the threshold.
         
         Parameters:
-        corr_data (pd.DataFrame): The correlation data to filter.
+        corr_data (pd.DataFrame): The correlation data will be target feature.
         threshold (float): The correlation threshold to filter features.
         
         Returns:
@@ -74,13 +79,11 @@ class NumericalMultiCollinearityInspection(MultiCollinearityInspectionStrategy):
         feature = []
         value = []
         
-        for index in corr_data.columns:
-        # Iterate through the rows of the correlation matrix for each column
-            for i in range(len(corr_data)):
-                if abs(corr_data.iloc[i][index]) > threshold:  # Compare each value in the matrix with threshold
-                    feature.append(corr_data.index[i])
-                    value.append(corr_data.iloc[i][index])
-    
+        for i , index in enumerate(corr_data.index):
+            if abs(corr_data[index])>threshold:
+                feature.append(index)
+                value.append(corr_data[index])
+
         # Create and return a DataFrame with the filtered correlated features
         df = pd.DataFrame(data=value, index=feature, columns=['corr value'])
         return df
@@ -108,7 +111,6 @@ class NumericalMultiCollinearityInspection(MultiCollinearityInspectionStrategy):
 
         print("Variance Inflation Factor (VIF):")
         print(vif_data)
-        
         return vif_data
 
 # Concrete Strategy for Categorical Collinearity
@@ -148,15 +150,29 @@ class CategoricalMultiCollinearityInspection(MultiCollinearityInspectionStrategy
         print(result)
 
         # Check for dependence between categorical features using Chi-square test
+        dependence_result = []
         for col1 in categorical_features:
             for col2 in categorical_features:
                 if col1 != col2:
                     contingency_table = pd.crosstab(df[col1], df[col2])
                     chi2, p, dof, expected = chi2_contingency(contingency_table)
+                    # Collect the result in a Dictionary
+                    dependence_result.append({
+                        'Feature 1': col1,
+                        'Feature 2': col2,
+                        'Chi-Square': chi2,
+                        'P-Value': p,
+                        'Degrees of Freedom': dof,
+                        'Dependency': 'Dependent' if p < 0.05 else 'Independent'
+                    })
                     if p < 0.05:  # If p-value is less than 0.05, features are dependent
                         print(f"Features '{col1}' and '{col2}' are dependent (Chi-square p-value: {p:.3f})")
                     else:
                         print(f"Features '{col1}' and '{col2}' are independent (Chi-square p-value: {p:.3f})")
+
+        # Convert the results to a DataFrame
+        dependence_result_df = pd.DataFrame(dependence_result)
+        # print(dependence_result_df)
 
 # Context Class to Use the Strategy
 class  MultiCollinearityInspector:
@@ -175,7 +191,7 @@ class  MultiCollinearityInspector:
 
     def execute_inspection(self, df: pd.DataFrame, correlation_threshold: float = None, vif_threshold: float = None, target_column: str = None):
         if self._strategy is None:
-            raise CustomException("Strategy is not set. Use `set_strategy` to set a strategy before executing inspection.")
+            raise CustomException("Strategy is not set. Use `set_strategy` to set a strategy before executing inspection.", sys)
         return self._strategy.inspect(df, correlation_threshold, vif_threshold, target_column)
 
 """
@@ -189,16 +205,6 @@ if __name__ == "__main__":
 
      # Initialize the context class without a strategy
     inspector = MultiCollinearityInspector()
-
-    # categorical_strategy = CategoricalMultiCollinearityInspection()
-    # inspector.set_strategy(categorical_strategy)
-    
-    # # Select categorical columns for inspection
-    # categorical_columns = [col for col in df.columns if col not in ['no_of_employees', 'yr_of_estab', 'prevailing_wage']]  # Replace with your actual columns
-    # inspector.execute_inspection(
-    #     df[categorical_columns], 
-    #     target_column=target_column
-    # )
 
     # inspector.set_strategy(NumericalMultiCollinearityInspection())
     # inspector.execute_inspection(df, correlation_threshold, vif_threshold, target_column)
