@@ -275,9 +275,9 @@ class MultiPlotBivariateAnalysis(BivariateAnalysisStrategy):
         plot_functions = {
             'histogram': self.histogram,
             'boxplot': self.boxplot,
+            'kde': self.kde,
             # 'density': self.density,
             # 'violin': self.violin,
-            # 'kde': self.kde,
             # 'bar': self.bar,
             # 'pie': self.pie,
             # 'count': self.count
@@ -307,16 +307,17 @@ class MultiPlotBivariateAnalysis(BivariateAnalysisStrategy):
             sns.histplot(data=df, x=feature, ax=ax, hue=hue, kde=True, bins=50, multiple='stack')
         else:
             sns.histplot(data=df, x=feature, ax=ax, kde=True, bins=50, color='blue')
-        # sns.histplot(df[feature], kde=True, bins=50, ax=ax)
+
+    def kde(self, df, feature, ax, hue, target_feature):
+        if hue:
+            sns.kdeplot(data=df, x=feature, ax=ax, hue=hue, shade=True)
+        else:
+            sns.kdeplot(data=df, x=feature, ax=ax, shade=True, color='blue')
+
 
     def boxplot(self, df, feature, ax, hue, target_feature):
-        # sns.boxplot(x=df[feature], ax=ax)
-        pass
         sns.boxplot(y=feature, x=target_feature, data=df, ax=ax, hue=hue)
-        # plt.title(f"Box Plot of {feature} Vs {feature_y}")
-        # plt.xticks(rotation=45)
-        # plt.tight_layout()
-        # plt.show()
+        
 
 # Context Class that uses a BivariateAnalysisStrategy
 class BivariateAnalyzer:

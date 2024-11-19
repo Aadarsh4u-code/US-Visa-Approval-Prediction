@@ -207,7 +207,6 @@ class MultiPlotUnivariantAnalysis(UnivariateAnalysisStrategy):
         plot_functions = {
             'histogram': self.histogram,
             'boxplot': self.boxplot,
-            'density': self.density,
             'violin': self.violin,
             'kde': self.kde,
             'bar': self.bar,
@@ -240,9 +239,6 @@ class MultiPlotUnivariantAnalysis(UnivariateAnalysisStrategy):
 
     def boxplot(self, df, feature, ax):
         sns.boxplot(x=df[feature], ax=ax)
-
-    def density(self, df, feature, ax):
-        sns.kdeplot(df[feature], fill=True, ax=ax)
 
     def violin(self, df, feature, ax):
         sns.violinplot(x=df[feature], ax=ax)
