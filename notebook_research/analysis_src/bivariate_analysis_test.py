@@ -12,7 +12,7 @@ import sys
 # Subclasses must implement the analyze method.
 class BivariateAnalysisStrategy(ABC):
     @abstractmethod
-    def analyze(self, df: pd.DataFrame, feature_x: str | list, feature_y: str, plot_type: str, hue: str = None):
+    def analyze(self, df: pd.DataFrame, feature_x: str, feature_y: str, plot_type: str, hue: str = None):
         """
         Perform bivariate analysis on a specific feature pair of the dataframe using a specified plot type.
 
@@ -32,7 +32,7 @@ class BivariateAnalysisStrategy(ABC):
 # ------------------------------------------------------
 # This strategy analyzes the relationship between two numerical features using plot given by user
 class NumericalVsNumericalBivariateAnalysis(BivariateAnalysisStrategy):
-    def analyze(self, df: pd.DataFrame, feature_x: str | list, feature_y: str, plot_type: str, hue: str = None):
+    def analyze(self, df: pd.DataFrame, feature_x: str, feature_y: str, plot_type: str, hue: str = None):
         """
         Plots the specified type of plot for two numerical features.
 
@@ -114,7 +114,7 @@ class NumericalVsNumericalBivariateAnalysis(BivariateAnalysisStrategy):
 # --------------------------------------------------------
 # This strategy analyzes the relationship between a numerical feature and a categorical feature.
 class NumericalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
-    def analyze(self, df: pd.DataFrame, feature_x: str | list, feature_y: str, plot_type: str, hue: str = None):
+    def analyze(self, df: pd.DataFrame, feature_x: str, feature_y: str, plot_type: str, hue: str = None):
         """
         Plots the specified type of plot for a numerical vs categorical feature.
 
@@ -183,7 +183,7 @@ class NumericalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
 # --------------------------------------------------------
 # This strategy analyzes the relationship between a categorical feature and a categorical feature.
 class CategoricalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
-    def analyze(self, df: pd.DataFrame, feature_x: str | list, feature_y: str, plot_type: str, hue: str = None):
+    def analyze(self, df: pd.DataFrame, feature_x: str, feature_y: str, plot_type: str, hue: str = None):
         """
         Plots the specified type of plot for two categorical features.
 
@@ -242,120 +242,44 @@ class CategoricalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
         plt.tight_layout()
         plt.show()
 
-# Concrete Strategy for Multiple Feature  Bivariant Analysis Strategy
-# ----------------------------------------------
-# This class allows to display multiple feature into a single frame i.e. subplots.
-class MultiPlotBivariateAnalysis(BivariateAnalysisStrategy):
-    def __init__(self, features: list, n_cols:int = 2, plot_type: str = None):
-        """
-        Initializes with a list of features and the number of columns for subplots.
-
-        Parameters:
-        features (list): List of feature names to analyze.
-        n_cols (int): Number of columns for the subplot layout.
-        plot_type (str): Type of plot to use for each feature.
-        """
-        self.features = features
-        self.n_cols = n_cols
-        self.plot_type = plot_type
-
-    # def analyze(self, df: pd.DataFrame, feature: str = None, plot_type: str = None):
-    def analyze(self, df: pd.DataFrame, feature_x: str, feature_y: str, plot_type: str, hue: str = None):
-        """
-        Plots multiple features in a grid layout.
-
-        Parameters:
-        df (pd.DataFrame): The dataframe containing the data.
-        """
-        n_rows = (len(self.features) + self.n_cols - 1) // self.n_cols  # Calculate required rows
-        fig, axes = plt.subplots(n_rows, self.n_cols, figsize=(self.n_cols * 6, n_rows * 5), dpi=200)
-        axes = axes.flatten()
-
-        # Dictionary to handle different plot types
-        plot_functions = {
-            'histogram': self.histogram,
-            'boxplot': self.boxplot,
-            # 'density': self.density,
-            # 'violin': self.violin,
-            # 'kde': self.kde,
-            # 'bar': self.bar,
-            # 'pie': self.pie,
-            # 'count': self.count
-        }
-
-        for i, feature in enumerate(self.features):
-            ax = axes[i]
-            # The := operator is a concise way to assign and check a variable at the same time.
-            if plot_func := plot_functions.get(self.plot_type):
-                plot_func(df, feature, ax, hue, target_feature = feature_y)  # Pass the axis to each plotting function
-                ax.set_title(f"{self.plot_type.title()} of {feature} vs {feature_y}")
-                ax.set_xlabel(feature)
-                ax.set_ylabel("Density" if pd.api.types.is_numeric_dtype(df[feature]) else "Frequency")
- 
-            else:
-                logging.warning(f"Unsupported plot type '{self.plot_type}' for feature '{feature}'.")
-
-        # Hide any unused subplots
-        for j in range(i + 1, len(axes)):
-            fig.delaxes(axes[j])
-
-        fig.tight_layout()
-        plt.show()
-
-    def histogram(self, df, feature, ax, hue, target_feature):
-        if hue:
-            sns.histplot(data=df, x=feature, ax=ax, hue=hue, kde=True, bins=50, multiple='stack')
-        else:
-            sns.histplot(data=df, x=feature, ax=ax, kde=True, bins=50, color='blue')
-        # sns.histplot(df[feature], kde=True, bins=50, ax=ax)
-
-    def boxplot(self, df, feature, ax, hue, target_feature):
-        # sns.boxplot(x=df[feature], ax=ax)
-        pass
-        sns.boxplot(y=feature, x=target_feature, data=df, ax=ax, hue=hue)
-        # plt.title(f"Box Plot of {feature} Vs {feature_y}")
-        # plt.xticks(rotation=45)
-        # plt.tight_layout()
-        # plt.show()
 
 # Context Class that uses a BivariateAnalysisStrategy
 class BivariateAnalyzer:
-    def __init__(self, strategy: BivariateAnalysisStrategy = None):
-        self._strategy = strategy
+    def __init__(self):
+        self._strategy = None
 
-    def set_strategy(self, strategy: BivariateAnalysisStrategy):
-        """
-        Set or change the strategy dynamically.
-        
-        Parameters:
-        strategy (BivariateAnalysisStrategy): The strategy to set.
-        """
-        self._strategy = strategy
+    def execute_analysis(self, df: pd.DataFrame, feature_x: str, feature_y: str, plot_type: str, hue: str = None):
+        if pd.api.types.is_numeric_dtype(df[feature_x]) and pd.api.types.is_numeric_dtype(df[feature_y]):
+            self._strategy = NumericalVsNumericalBivariateAnalysis()
+        elif (pd.api.types.is_numeric_dtype(df[feature_x]) and df[feature_y].dtype == 'object') or (pd.api.types.is_numeric_dtype(df[feature_y]) and df[feature_x].dtype == 'object'):
+            self._strategy = NumericalVsCategoricalBivariateAnalysis()
+        elif (df[feature_x].dtype == 'object' and df[feature_y].dtype == 'object'):
+            self._strategy = CategoricalVsCategoricalBivariateAnalysis()
+        else:
+            raise CustomException("Unsupported combination of feature types for bivariate analysis.", sys)
 
-    def execute_analysis(self, df: pd.DataFrame, feature_x: str | list, feature_y: str, plot_type: str, hue: str = None):
-        if self._strategy is None:
-            raise CustomException("Strategy is not set. Use `set_strategy` to set a strategy before executing inspection.", sys)
-        return self._strategy.analyze(df, feature_x, feature_y, plot_type, hue)
-    
+        self._strategy.analyze(df, feature_x, feature_y, plot_type, hue)
+
 
 # Example usage
 # if __name__ == "__main__":
 #     df = pd.read_csv("/Users/aadarsh/Desktop/Data Scientist/Projects/US-Visa-Approval-Prediction/us_visa/data/extracted_data/EasyVisa.csv")
 
+#     # Initialize BivariateAnalyzer
 #     bivariate_analyzer = BivariateAnalyzer()
+
     # Example: Numerical vs Numerical
-    # bivariate_analyzer.set_strategy(NumericalVsNumericalBivariateAnalysis())
-    # bivariate_analyzer.execute_analysis(df, feature_x='yr_of_estab', feature_y='prevailing_wage', plot_type='histogram', hue='case_status')
+    # bivariate_analyzer.execute_analysis(df, feature_x='yr_of_estab', feature_y='prevailing_wage', plot_type='correlation_heatmap', hue='case_status')
 
     # Example: Numerical vs Categorical
-    # bivariate_analyzer.set_strategy(NumericalVsCategoricalBivariateAnalysis())
     # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='continent', plot_type='boxplot', hue='case_status')
+    # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='has_job_experience', plot_type='violin', hue='case_status')
+    # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='has_job_experience', plot_type='lineplot', hue='case_status')
+    # bivariate_analyzer.execute_analysis(df, feature_x='prevailing_wage', feature_y='has_job_experience', plot_type='barplot', hue='case_status')
 
     # Example: Categorical vs Categorical
-    # bivariate_analyzer.set_strategy(CategoricalVsCategoricalBivariateAnalysis())
     # bivariate_analyzer.execute_analysis(df, feature_x='region_of_employment', feature_y='unit_of_wage', plot_type='stacked_bar', hue='case_status')
-    # bivariate_analyzer.execute_analysis(df, feature_x='region_of_employment', feature_y='unit_of_wage', plot_type='grouped_bar', hue='case_status')
 
-    # Example: Multiplot Numerical vs Numerical or Numerical vs Categorical
-    # bivariate_analyzer.set_strategy(MultiPlotBivariateAnalysis(features=['no_of_employees', 'yr_of_estab', 'prevailing_wage'], plot_type='boxplot'))
-    # bivariate_analyzer.execute_analysis(df, feature_x='', feature_y='case_status', plot_type='boxplot', hue='case_status')
+
+
+
