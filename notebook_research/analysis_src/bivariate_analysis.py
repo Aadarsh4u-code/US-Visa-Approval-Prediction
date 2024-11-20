@@ -12,7 +12,7 @@ import sys
 # Subclasses must implement the analyze method.
 class BivariateAnalysisStrategy(ABC):
     @abstractmethod
-    def analyze(self, df: pd.DataFrame, feature_x: str | list, feature_y: str, plot_type: str, hue: str = None):
+    def analyze(self, df: pd.DataFrame, feature_x: str, feature_y: str, plot_type: str, hue: str = None):
         """
         Perform bivariate analysis on a specific feature pair of the dataframe using a specified plot type.
 
@@ -32,7 +32,7 @@ class BivariateAnalysisStrategy(ABC):
 # ------------------------------------------------------
 # This strategy analyzes the relationship between two numerical features using plot given by user
 class NumericalVsNumericalBivariateAnalysis(BivariateAnalysisStrategy):
-    def analyze(self, df: pd.DataFrame, feature_x: str | list, feature_y: str, plot_type: str, hue: str = None):
+    def analyze(self, df: pd.DataFrame, feature_x: str, feature_y: str, plot_type: str, hue: str = None):
         """
         Plots the specified type of plot for two numerical features.
 
@@ -114,7 +114,7 @@ class NumericalVsNumericalBivariateAnalysis(BivariateAnalysisStrategy):
 # --------------------------------------------------------
 # This strategy analyzes the relationship between a numerical feature and a categorical feature.
 class NumericalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
-    def analyze(self, df: pd.DataFrame, feature_x: str | list, feature_y: str, plot_type: str, hue: str = None):
+    def analyze(self, df: pd.DataFrame, feature_x: str, feature_y: str, plot_type: str, hue: str = None):
         """
         Plots the specified type of plot for a numerical vs categorical feature.
 
@@ -183,7 +183,7 @@ class NumericalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
 # --------------------------------------------------------
 # This strategy analyzes the relationship between a categorical feature and a categorical feature.
 class CategoricalVsCategoricalBivariateAnalysis(BivariateAnalysisStrategy):
-    def analyze(self, df: pd.DataFrame, feature_x: str | list, feature_y: str, plot_type: str, hue: str = None):
+    def analyze(self, df: pd.DataFrame, feature_x: str, feature_y: str, plot_type: str, hue: str = None):
         """
         Plots the specified type of plot for two categorical features.
 
@@ -333,7 +333,7 @@ class BivariateAnalyzer:
         """
         self._strategy = strategy
 
-    def execute_analysis(self, df: pd.DataFrame, feature_x: str | list, feature_y: str, plot_type: str, hue: str = None):
+    def execute_analysis(self, df: pd.DataFrame, feature_x: str, feature_y: str, plot_type: str, hue: str = None):
         if self._strategy is None:
             raise CustomException("Strategy is not set. Use `set_strategy` to set a strategy before executing inspection.", sys)
         return self._strategy.analyze(df, feature_x, feature_y, plot_type, hue)
