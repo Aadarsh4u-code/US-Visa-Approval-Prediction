@@ -105,10 +105,29 @@ class CategoricalVsCategoricalAnalysis(IndependentVsDependentVariableAnalysisTem
 
         # Add titles and labels
         plt.title(f"Certified vs Denied Cases by {independent_feature} (%)", fontsize=16)
-        plt.xlabel("Continent", fontsize=14)
+        plt.xlabel(f"{independent_feature}", fontsize=14)
         plt.ylabel("Percentage (%)", fontsize=14)
         plt.legend(title="Case Status")
         plt.xticks(rotation=45)
+
+        # Show the plot
+        plt.tight_layout()
+        plt.show()
+
+
+class CategoricalVsNumericalAnalysis(IndependentVsDependentVariableAnalysisTemplate):
+    def visualize_frequency_category(self, df: pd.DataFrame, independent_feature:str, target_feature: str):
+        group_df = df.groupby(independent_feature)[target_feature].mean().to_frame().sort_values(by=target_feature, ascending=False)
+        print(f"Average {target_feature} based on { independent_feature}",group_df)
+
+    def visualize_proportion(self, df: pd.DataFrame, independent_feature:str, target_feature: str):
+
+        # Add titles and labels
+        plt.figure(figsize=(10, 6))
+        sns.boxplot(y=independent_feature, x = target_feature, data=df, palette='bright')
+        plt.title(f"{independent_feature} vs {target_feature}", pad=20)
+        plt.xlabel(f"{target_feature}")
+        plt.ylabel(f"{independent_feature}")
 
         # Show the plot
         plt.tight_layout()

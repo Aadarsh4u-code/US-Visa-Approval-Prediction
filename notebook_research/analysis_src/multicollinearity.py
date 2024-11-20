@@ -148,6 +148,9 @@ class CategoricalMultiCollinearityInspection(MultiCollinearityInspectionStrategy
         result = pd.DataFrame(data=[categorical_features, chi2_test]).T
         result.columns = ['Column', 'Hypothesis Result']
         print(result)
+        
+        print("------------------------------------------------------")
+        print("------------------------------------------------------")
 
         # Check for dependence between categorical features using Chi-square test
         dependence_result = []

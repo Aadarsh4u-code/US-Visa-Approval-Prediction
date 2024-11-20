@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 from datetime import datetime
+from from_root import from_root
 
 # Format to how log file is created
 log_file_name = f"{datetime.now().strftime('%d_%m_%Y_%H_%M_%S')}.log"
