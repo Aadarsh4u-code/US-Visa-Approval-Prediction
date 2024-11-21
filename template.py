@@ -53,7 +53,8 @@ list_of_files = [
     "Dockerfile",
     ".dockerignore",
     "demo.py",
-    "setup.py"
+    "setup.py",
+    ".env"
 ]
 
 for file_path in list_of_files:
