@@ -44,7 +44,6 @@ class DataValidationConfig:
                                                DATA_VALIDATION_DRIFT_REPORT_FILE_NAME)
     
 
-
 # Step 3. Data Transformation
 #------------------------------------------------------------------
 @dataclass

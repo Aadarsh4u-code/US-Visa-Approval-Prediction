@@ -100,9 +100,10 @@ pip freeze > requirements.txt
 
 1. constants
 2. entity
-3. components
-4. pipeline
-5. Main file
+3. data access
+4. components
+5. pipeline
+6. Main file
 
 ### Export the environment variable
 

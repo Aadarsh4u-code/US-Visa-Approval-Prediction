@@ -10,6 +10,7 @@ __pycache__/
 .ipynb_checkpoints
 .DS_Store
 logs
+artifact/*
 
 # C extensions
 *.so
