@@ -5,7 +5,7 @@ from datetime import date
 # ----------------------------------------------------
 DATABASE_NAME: str = "US_VISA"
 COLLECTION_NAME: str = "visa_data"
-MONGODB_URL_KEY: str = "MONGODB_URL"
+# MONGODB_URL_KEY: str = "MONGODB_URL"
 
 # File and Directory related constant
 # ----------------------------------------------------
