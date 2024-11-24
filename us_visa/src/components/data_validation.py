@@ -21,7 +21,7 @@ class DataValidation:
         try:
             self.data_ingestion_artifact = data_ingestion_artifact
             self.data_validation_config = data_validation_config
-            self._schema_config = read_yaml_file(file_path=SCHEMA_FILE_PATH)
+            self._schema_config = read_yaml_file(path_to_yaml=SCHEMA_FILE_PATH)
         except Exception as e:
             raise CustomException(e,sys)
         
@@ -93,8 +93,8 @@ class DataValidation:
 
             report = data_drift_profile.json()
             json_report = json.loads(report)
-            save_json_object(file_path=self.data_validation_config.drift_report_json_file_path, content = json_report)
-            write_yaml_file(file_path=self.data_validation_config.drift_report_file_path, content=json_report)
+            save_json_object(path_to_obj=self.data_validation_config.drift_report_json_file_path, content = json_report, replace=True)
+            write_yaml_file(path_to_yaml=self.data_validation_config.drift_report_file_path, content=json_report, replace=True)
 
             n_features = json_report["data_drift"]["data"]["metrics"]["n_features"]
             n_drifted_features = json_report["data_drift"]["data"]["metrics"]["n_drifted_features"]
@@ -121,13 +121,13 @@ class DataValidation:
             train_df, test_df = (DataValidation.read_data(file_path=self.data_ingestion_artifact.trained_file_path),
                                  DataValidation.read_data(file_path=self.data_ingestion_artifact.test_file_path))
             # For Number of Columns in Training Data
-            status = self.validate_number_of_columns(dataframe=train_df)
+            status = self.validate_number_of_columns(df=train_df)
             logging.info(f"All required columns present in training dataframe: {status}")
             if not status:
                 validation_error_msg += f"Columns are missing in training dataframe."
             
             # For Number of Columns in Testing Data
-            status = self.validate_number_of_columns(dataframe=test_df)
+            status = self.validate_number_of_columns(df=test_df)
             logging.info(f"All required columns present in testing dataframe: {status}")
             if not status:
                 validation_error_msg += f"Columns are missing in test dataframe."

@@ -3,8 +3,8 @@ from us_visa.exception import CustomException
 from us_visa.logger import logging
 from us_visa.src.components.data_ingestion import DataIngestion
 from us_visa.src.components.data_validation import DataValidation
-from us_visa.entity.config_entity import DataIngestionConfig, DataValidationConfig
-from us_visa.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact
+from us_visa.entity.config_entity import (DataIngestionConfig, DataValidationConfig)
+from us_visa.entity.artifact_entity import (DataIngestionArtifact, DataValidationArtifact)
 
 class TrainPipeline:
     def __init__(self):
