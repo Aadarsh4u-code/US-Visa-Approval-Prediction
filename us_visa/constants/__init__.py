@@ -42,6 +42,7 @@ DATA_INGESTION_TRAIN_TEST_SPLIT_RATIO: float = 0.2
 DATA_VALIDATION_DIR_NAME: str = "data_validation"
 DATA_VALIDATION_DRIFT_REPORT_DIR: str = "drift_report"
 DATA_VALIDATION_DRIFT_REPORT_FILE_NAME: str = "report.yaml"
+DATA_VALIDATION_DRIFT_REPORT_FILE_NAME_JSON: str = "report.json"
 
 
 # Data Transformation ralated constant start with DATA_TRANSFORMATION VAR NAME

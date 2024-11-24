@@ -2,6 +2,7 @@ import os
 import sys
 import dill
 import yaml
+import json
 from box import ConfigBox
 from box.exceptions import BoxValueError
 from pathlib import Path
@@ -41,6 +42,21 @@ def write_yaml_file(path_to_yaml: Path, content: object, replace:bool = False) -
                 yaml.dump(content, yaml_file)
             logging.info(f"yaml file: {path_to_yaml} written successfully")
         logging.info("Exited the write_yaml_file method of utils")  
+
+    except Exception as e:
+        raise CustomException(e, sys) from e
+    
+def save_json_object(path_to_obj: Path, content: object, replace:bool = False) -> None:
+    logging.info("Entered the save_json_object method of utils")
+    try:
+        if replace:
+            if os.path.exists(path_to_obj):
+                os.remove(path_to_obj)
+            os.makedirs(os.path.dirname(path_to_obj), exist_ok=True)
+            with open(path_to_obj, 'w') as json_file:
+                json.dump(content, json_file, indent = 4)
+            logging.info(f"json file: {path_to_obj} written successfully")
+        logging.info("Exited the save_json_object method of utils")  
 
     except Exception as e:
         raise CustomException(e, sys) from e
