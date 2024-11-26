@@ -1,5 +1,6 @@
 import json
 import sys
+import os
 
 import pandas as pd
 from evidently.model_profile import Profile
@@ -153,10 +154,26 @@ class DataValidation:
                     validation_error_msg = "Drift not detected"
             else:
                 logging.info(f"Validation_error: {validation_error_msg}")
-                
+
+            valid_dir_path = os.path.dirname(self.data_validation_config.valid_train_file_path)
+            invalid_dir_path = os.path.dirname(self.data_validation_config.invalid_test_file_path)
+
+            if validation_status:
+                os.makedirs(valid_dir_path,exist_ok=True)
+                train_df.to_csv(self.data_validation_config.valid_train_file_path, index=False, header=True)
+                test_df.to_csv(self.data_validation_config.valid_test_file_path, index=False, header=True)
+            else:
+                os.makedirs(invalid_dir_path,exist_ok=True)
+                train_df.to_csv(self.data_validation_config.invalid_train_file_path, index=False, header=True)
+                test_df.to_csv(self.data_validation_config.invalid_test_file_path, index=False, header=True)
+            
 
             data_validation_artifact = DataValidationArtifact(
                 validation_status=validation_status,
+                valid_train_file_path=self.data_validation_config.valid_train_file_path,
+                valid_test_file_path=self.data_validation_config.valid_test_file_path,
+                invalid_train_file_path=self.data_validation_config.invalid_train_file_path,
+                invalid_test_file_path=self.data_validation_config.invalid_test_file_path,
                 message=validation_error_msg,
                 drift_report_file_path=self.data_validation_config.drift_report_file_path,
                 drift_report_json_file_path = self.data_validation_config.drift_report_json_file_path  
