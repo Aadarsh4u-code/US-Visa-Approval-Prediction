@@ -24,7 +24,7 @@ class DataValidation:
             self.data_validation_config = data_validation_config
             self._schema_config = read_yaml_file(path_to_yaml=SCHEMA_FILE_PATH)
         except Exception as e:
-            raise CustomException(e,sys)
+            raise CustomException(e,sys) from e
         
     def validate_number_of_columns(self, df: pd.DataFrame) -> bool:
         """

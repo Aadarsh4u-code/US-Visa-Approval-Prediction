@@ -112,9 +112,9 @@ def load_numpy_array_data(path_to_npdata: Path) -> np.array:
 
 
 
-def save_object(path_to_obj: Path, obj: object) -> None:
+def save_object(path_to_obj: Path, obj) -> None:
     logging.info("Entered the save_object method of utils")
-
+    print(path_to_obj,'path_to_obj')
     try:
         os.makedirs(os.path.dirname(path_to_obj), exist_ok=True)
         with open(path_to_obj, "wb") as file_obj:
