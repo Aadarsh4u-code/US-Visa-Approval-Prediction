@@ -41,12 +41,15 @@ class DataTransformationArtifact:
 #------------------------------------------------------------------
 @dataclass
 class ClassificationMetricArtifact:
+    accuracy: float
     f1_score:float
     precision_score:float
     recall_score:float
+    roc_auc_score: float
 
 @dataclass
 class ModelTrainerArtifact:
+    best_model_name: str
     trained_model_file_path:str 
     metric_artifact:ClassificationMetricArtifact
 

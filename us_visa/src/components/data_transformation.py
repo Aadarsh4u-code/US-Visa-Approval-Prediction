@@ -1,6 +1,7 @@
 import sys
 import pandas as pd
 import numpy as np
+from sklearn import set_config
 from imblearn.combine import SMOTEENN
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder, PowerTransformer
@@ -13,6 +14,8 @@ from us_visa.exception import CustomException
 from us_visa.logger import logging
 from us_visa.utils.main_utils import save_numpy_array_data, save_object, read_yaml_file, drop_columns
 from us_visa.entity.estimator import TargetValueMapping
+
+set_config(display='diagram')
 
 class DataTransformation:
     def __init__(self, data_ingestion_artifact: DataIngestionArtifact, 
