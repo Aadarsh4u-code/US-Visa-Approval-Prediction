@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import pymongo
 import certifi
 
-from us_visa.constants import COLLECTION_NAME, DATABASE_NAME
+from us_visa.constants import COLLECTION_NAME, DATABASE_NAME, MONGODB_URL_KEY
 from us_visa.exception import CustomException
 from us_visa.logger import logging
 
@@ -31,9 +31,9 @@ class MongoDBClient:
         try:
             logging.info("MongoDB connecting...")
             if MongoDBClient.client is None:
-                mongo_db_url = os.getenv('MONGODB_URL_KEY')
+                mongo_db_url = os.getenv(MONGODB_URL_KEY)
                 if mongo_db_url is None:
-                    raise CustomException(f"Environment key: 'MONGODB_URL_KEY' is not set.")
+                    raise CustomException(f"Environment key: '{MONGODB_URL_KEY}' is not set.")
                 MongoDBClient.client = pymongo.MongoClient(mongo_db_url, tlsCAFile=ca)
             
             self.client = MongoDBClient.client
@@ -44,4 +44,4 @@ class MongoDBClient:
             raise CustomException(e, sys) from e
 
 # Usage example         
-# connection = MongoDBClient(COLLECTION_NAME)
+connection = MongoDBClient(COLLECTION_NAME)

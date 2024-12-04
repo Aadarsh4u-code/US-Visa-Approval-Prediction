@@ -1,9 +1,6 @@
 import sys
 from typing import Tuple
 import numpy as np
-import pandas as pd
-from sklearn.pipeline import Pipeline
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
 
 from us_visa.exception import CustomException
 from us_visa.logger import logging
@@ -31,23 +28,15 @@ class ModelTrainer:
         On Failure  :   Write an exception log and then raise an exception
         """
         try:
-            logging.info("Using neuro_mf to get best model object and report--------------------------------")
-            # model_factory = ModelFactory(model_config_path=self.model_trainer_config.model_config_file_path)
+            logging.info("Using ModelTraining class to train model.")
             model_factory = ModelFactory(model_config_path=self.model_trainer_config.model_config_file_path)
             
-            # X_train, y_train, X_test, y_test = train[:, :-1], train[:, -1], test[:, :-1], test[:, -1]
-
-            # best_model_detail = model_factory.get_best_model(
-            #     X=X_train,y=y_train,base_accuracy=self.model_trainer_config.expected_accuracy
-            # )
-           
             model_training = ModelTraining(model_factory=model_factory, base_accuracy=self.model_trainer_config.expected_accuracy)
             
             # Run the training and evaluation pipeline
             best_model_details = model_training.train_and_evaluate(train, test)
     
             # Extract all necessary details from the results
-
             metric_artifact = ClassificationMetricArtifact(
                 accuracy=best_model_details.metrics_after.accuracy,
                 f1_score=best_model_details.metrics_after.f1_score,
@@ -76,9 +65,7 @@ class ModelTrainer:
             test_arr = load_numpy_array_data(path_to_npdata=self.data_transformation_artifact.transformed_test_file_path)
             
             best_model_details ,metric_artifact = self.get_model_object_and_report(train=train_arr, test=test_arr)
-            print(best_model_details,"<-"*50)
             preprocessing_obj = load_object(path_to_obj=self.data_transformation_artifact.transformed_object_file_path)
-
 
             if best_model_details.metrics_after.roc_auc_score < self.model_trainer_config.expected_accuracy:
                 logging.info("No best model found with score more than base score")

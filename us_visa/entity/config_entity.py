@@ -98,6 +98,6 @@ class ModelPusherConfig:
 # Step 7. Model Prediction
 #------------------------------------------------------------------
 @dataclass
-class USvisaPredictorConfig:
+class USVisaPredictorConfig:
     model_file_path: str = MODEL_FILE_NAME
     model_bucket_name: str = MODEL_BUCKET_NAME

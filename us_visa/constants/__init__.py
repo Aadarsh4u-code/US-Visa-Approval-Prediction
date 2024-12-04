@@ -1,11 +1,16 @@
 import os
 from datetime import date
 
-# Database related constant
+# Database and AWS related constant
 # ----------------------------------------------------
 DATABASE_NAME: str = "US_VISA"
 COLLECTION_NAME: str = "visa_data"
-# MONGODB_URL_KEY: str = "MONGODB_URL"
+MONGODB_URL_KEY: str = "MONGODB_URL_KEY"
+
+# AWS
+AWS_ACCESS_KEY_ID_ENV_KEY = "AWS_ACCESS_KEY_ID_ENV_KEY"
+AWS_SECRET_ACCESS_KEY_ENV_KEY = "AWS_SECRET_ACCESS_KEY_ENV_KEY"
+REGION_NAME = "REGION_NAME"
 
 # File and Directory related constant
 # ----------------------------------------------------
@@ -74,8 +79,8 @@ SEARCH_PARAM_GRID_KEY = "search_param_grid"
 # MODEL EVALUATION related constant 
 # ----------------------------------------------------
 MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE: float = 0.02
-MODEL_BUCKET_NAME = "usvisa-model2024"
-MODEL_PUSHER_S3_KEY = "model-registry"
+MODEL_BUCKET_NAME = "usvisa-model2024-exp-1"
+MODEL_PUSHER_S3_KEY = "usvisa-model-registry"
 
 # App Host related constant 
 # ----------------------------------------------------
