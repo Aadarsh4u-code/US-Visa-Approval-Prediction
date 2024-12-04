@@ -62,6 +62,14 @@ MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
 MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
 MODEL_TRAINER_MODEL_CONFIG_FILE_PATH: str = os.path.join("config", "model.yaml")
 
+# LOAD  MODEL YAML CONFIGURATION related constant
+GRID_SEARCH_KEY = 'grid_search'
+MODULE_KEY = 'module'
+CLASS_KEY = 'class'
+PARAM_KEY = 'params'
+MODEL_SELECTION_KEY = 'model_selection'
+SEARCH_PARAM_GRID_KEY = "search_param_grid"
+
 
 # MODEL EVALUATION related constant 
 # ----------------------------------------------------

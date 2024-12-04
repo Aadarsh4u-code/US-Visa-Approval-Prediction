@@ -4,7 +4,8 @@ Artifact entity is the output comming from the component and treated as a input 
 """
 #******************************************************************
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Any, List, Dict, Optional
 
 # Step 1. Data Ingestion
 #------------------------------------------------------------------
@@ -46,6 +47,21 @@ class ClassificationMetricArtifact:
     precision_score:float
     recall_score:float
     roc_auc_score: float
+
+@dataclass
+class ModelEvaluationResult:
+    best_model_name: Optional[str] = None
+    best_params: Optional[Dict[str, Any]] = None
+    metrics_before: Optional[Dict[str, float]] = None
+    metrics_after: Optional[Dict[str, float]] = None
+    models_list: List[str] = field(default_factory=list)
+    accuracy_list: List[float] = field(default_factory=list)
+    precision: List[float] = field(default_factory=list)
+    recall: List[float] = field(default_factory=list)
+    f1_score: List[float] = field(default_factory=list)
+    roc_auc_score: List[float] = field(default_factory=list)
+    best_model_object: Any = None
+    best_score: float= None
 
 @dataclass
 class ModelTrainerArtifact:
