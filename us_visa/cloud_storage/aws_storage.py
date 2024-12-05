@@ -95,16 +95,23 @@ class SimpleStorageService:
             bucket = self.get_bucket(bucket_name)
 
             file_objects = [file_object for file_object in bucket.objects.filter(Prefix=filename)]
+            # func = lambda x: x[0] if len(x) == 1 else x
 
-            func = lambda x: x[0] if len(x) == 1 else x
+            # file_objs = func(file_objects)
+            # logging.info("Exited the get_file_object method of S3Operations class")
 
-            file_objs = func(file_objects)
-            logging.info("Exited the get_file_object method of S3Operations class")
-
-            return file_objs
-
-        except Exception as e:
+            # return file_objs
+            if not file_objects:
+                raise FileNotFoundError(f"No files found in bucket {bucket_name} with prefix {filename}")
+            logging.info("Exited the get_file_object method of S3 Operations class")
+            return file_objects[0]
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'AccessDenied':
+                raise PermissionError(f"Access denied: {e}")
             raise CustomException(e, sys) from e
+
+            
+
 
     def load_model(self, model_name: str, bucket_name: str, model_dir: str = None) -> object:
         """
