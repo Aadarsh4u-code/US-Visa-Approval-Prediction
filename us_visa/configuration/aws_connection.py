@@ -25,6 +25,8 @@ class S3Client:
             if S3Client.s3_resources is None or S3Client.s3_client is None:
                 __access_key_id = os.getenv(AWS_ACCESS_KEY_ID_ENV_KEY)
                 __secret_access_key = os.getenv(AWS_SECRET_ACCESS_KEY_ENV_KEY)
+                print('__access_key_id',__access_key_id)
+                print('__secret_access_key',__secret_access_key)
                 if __access_key_id is None:
                     raise CustomException(f"Environment variable: {AWS_ACCESS_KEY_ID_ENV_KEY} is not not set.")
                 if __secret_access_key is None:

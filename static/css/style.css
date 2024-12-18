@@ -11,6 +11,17 @@ body {
     margin: 0;
     padding: 0;
     font-family: sans-serif;
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
+    /* background-color: lightgrey; */
+}
+
+.header-title {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .formBox {
@@ -36,7 +47,7 @@ h1 {
     width: 100%;
     display: flex;
     align-items: center;
-    justify-items: center;
+    justify-content: center;
 }
 
 .button {
