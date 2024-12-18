@@ -170,7 +170,7 @@ export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
 
     sudo sh get-docker.sh
 
-    sudo usermod -aG docker ubuntu
+    sudo usermod -aG docker ubuntu 
 
     newgrp docker
 
