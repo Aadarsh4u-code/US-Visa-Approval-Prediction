@@ -28,157 +28,157 @@ model_selection:
         - 5
         - 9
 
-  # module_1:
-  #   class: RandomForestClassifier
-  #   module: sklearn.ensemble
-  #   params:
-  #     max_depth: 10
-  #     max_features: sqrt
-  #     n_estimators: 3
-  #   search_param_grid:
-  #     max_depth:
-  #       - 10
-  #       - 15
-  #       - 20
-  #     max_features:
-  #       - sqrt
-  #       - log2
-  #     n_estimators:
-  #       - 3
-  #       - 5
-  #       - 9
-  # module_2:
-  #   class: XGBClassifier
-  #   module: xgboost
-  #   params:
-  #     learning_rate: 0.1
-  #     max_depth: 3
-  #     n_estimators: 100
-  #   search_param_grid:
-  #     learning_rate:
-  #       - 0.01
-  #       - 0.1
-  #       - 0.3
-  #     max_depth:
-  #       - 3
-  #       - 6
-  #       - 9
-  #     n_estimators:
-  #       - 100
-  #       - 200
-  #       - 300
+  module_1:
+    class: RandomForestClassifier
+    module: sklearn.ensemble
+    params:
+      max_depth: 10
+      max_features: sqrt
+      n_estimators: 3
+    search_param_grid:
+      max_depth:
+        - 10
+        - 15
+        - 20
+      max_features:
+        - sqrt
+        - log2
+      n_estimators:
+        - 3
+        - 5
+        - 9
+  module_2:
+    class: XGBClassifier
+    module: xgboost
+    params:
+      learning_rate: 0.1
+      max_depth: 3
+      n_estimators: 100
+    search_param_grid:
+      learning_rate:
+        - 0.01
+        - 0.1
+        - 0.3
+      max_depth:
+        - 3
+        - 6
+        - 9
+      n_estimators:
+        - 100
+        - 200
+        - 300
 
-  # module_3:
-  #   class: DecisionTreeClassifier
-  #   module: sklearn.tree
-  #   params:
-  #     criterion: gini
-  #     max_depth: null # Use `null` for Python's `None`
-  #     min_samples_split: 2
-  #   search_param_grid:
-  #     criterion:
-  #       - gini
-  #       - entropy
-  #     max_depth:
-  #       - null
-  #       - 10
-  #       - 20
-  #     min_samples_split:
-  #       - 2
-  #       - 5
-  #       - 10
+  module_3:
+    class: DecisionTreeClassifier
+    module: sklearn.tree
+    params:
+      criterion: gini
+      max_depth: null # Use `null` for Python's `None`
+      min_samples_split: 2
+    search_param_grid:
+      criterion:
+        - gini
+        - entropy
+      max_depth:
+        - null
+        - 10
+        - 20
+      min_samples_split:
+        - 2
+        - 5
+        - 10
 
-  # module_4:
-  #   class: CatBoostClassifier
-  #   module: catboost
-  #   params:
-  #     iterations: 100
-  #     depth: 6
-  #     learning_rate: 0.1
-  #   search_param_grid:
-  #     iterations:
-  #       - 100
-  #       - 200
-  #       - 500
-  #     depth:
-  #       - 3
-  #       - 6
-  #       - 10
-  #     learning_rate:
-  #       - 0.01
-  #       - 0.1
-  #       - 0.5
+  module_4:
+    class: CatBoostClassifier
+    module: catboost
+    params:
+      iterations: 100
+      depth: 6
+      learning_rate: 0.1
+    search_param_grid:
+      iterations:
+        - 100
+        - 200
+        - 500
+      depth:
+        - 3
+        - 6
+        - 10
+      learning_rate:
+        - 0.01
+        - 0.1
+        - 0.5
 
-  # module_5:
-  #   class: GradientBoostingClassifier
-  #   module: sklearn.ensemble
-  #   params:
-  #     learning_rate: 0.1
-  #     max_depth: 3
-  #     n_estimators: 100
-  #   search_param_grid:
-  #     learning_rate:
-  #       - 0.01
-  #       - 0.1
-  #       - 0.3
-  #     max_depth:
-  #       - 3
-  #       - 6
-  #       - 9
-  #     n_estimators:
-  #       - 100
-  #       - 200
-  #       - 300
+  module_5:
+    class: GradientBoostingClassifier
+    module: sklearn.ensemble
+    params:
+      learning_rate: 0.1
+      max_depth: 3
+      n_estimators: 100
+    search_param_grid:
+      learning_rate:
+        - 0.01
+        - 0.1
+        - 0.3
+      max_depth:
+        - 3
+        - 6
+        - 9
+      n_estimators:
+        - 100
+        - 200
+        - 300
 
-  # module_6:
-  #   class: SVC
-  #   module: sklearn.svm
-  #   params:
-  #     C: 1.0
-  #     kernel: rbf
-  #     gamma: scale
-  #   search_param_grid:
-  #     C:
-  #       - 0.1
-  #       - 1.0
-  #       - 10.0
-  #     kernel:
-  #       - linear
-  #       - rbf
-  #       - poly
-  #     gamma:
-  #       - scale
-  #       - auto
+  module_6:
+    class: SVC
+    module: sklearn.svm
+    params:
+      C: 1.0
+      kernel: rbf
+      gamma: scale
+    search_param_grid:
+      C:
+        - 0.1
+        - 1.0
+        - 10.0
+      kernel:
+        - linear
+        - rbf
+        - poly
+      gamma:
+        - scale
+        - auto
 
-  # module_7:
-  #   class: AdaBoostClassifier
-  #   module: sklearn.ensemble
-  #   params:
-  #     n_estimators: 50
-  #     learning_rate: 1.0
-  #   search_param_grid:
-  #     n_estimators:
-  #       - 50
-  #       - 100
-  #       - 200
-  #     learning_rate:
-  #       - 0.1
-  #       - 0.5
-  #       - 1.0
+  module_7:
+    class: AdaBoostClassifier
+    module: sklearn.ensemble
+    params:
+      n_estimators: 50
+      learning_rate: 1.0
+    search_param_grid:
+      n_estimators:
+        - 50
+        - 100
+        - 200
+      learning_rate:
+        - 0.1
+        - 0.5
+        - 1.0
 
-  # module_8:
-  #   class: LogisticRegression
-  #   module: sklearn.linear_model
-  #   params:
-  #     penalty: l2
-  #     solver: lbfgs
-  #   search_param_grid:
-  #     penalty:
-  #       - l2
-  #     solver:
-  #       - lbfgs
-  #       - sag
-  #     C:
-  #       - 0.1
-  #       - 1
-  #       - 10
+  module_8:
+    class: LogisticRegression
+    module: sklearn.linear_model
+    params:
+      penalty: l2
+      solver: lbfgs
+    search_param_grid:
+      penalty:
+        - l2
+      solver:
+        - lbfgs
+        - sag
+      C:
+        - 0.1
+        - 1
+        - 10
